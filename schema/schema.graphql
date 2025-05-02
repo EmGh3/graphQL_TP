@@ -1,29 +1,68 @@
 enum Role {
-    ADMIN
-    USER
+  ADMIN
+  USER
 }
 
 type Cv {
-    id: Int!
-    name: String!
-    age: Int!
-    job: String!
-    user: User
-    skills: [Skill]
+  id: Int!
+  name: String!
+  age: Int!
+  job: String!
+  user: User
+  skills: [Skill!]!
 }
+
 type Skill {
-    id: Int!
-    designation: String!
-    cvs: [Cv]
+  id: Int!
+  designation: String!
 }
+
 type User {
-    id: Int!
-    name: String!
-    email: String!
-    role: Role!
-    cvs: [Cv]
+  id: Int!
+  name: String!
+  email: String!
+  role: Role!
 }
+
+input CreateCvInput {
+  name: String!
+  age: Int!
+  job: String!
+  userId: Int!
+  skillIds: [Int!]!
+}
+
+input UpdateCvInput {
+  id: Int!
+  name: String
+  age: Int
+  job: String
+  userId: Int
+  skillIds: [Int!]
+}
+
+enum CvEventType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type CvEvent {
+  type: CvEventType!
+  cv: Cv!
+}
+
 type Query {
-    getAllCvs: [Cv]
-    getCv(id: Int!): Cv
+  getAllCvs: [Cv!]!
+  getCv(id: Int!): Cv
+}
+
+type Mutation {
+  createCv(input: CreateCvInput!): Cv!
+  updateCv(input: UpdateCvInput!): Cv!
+  deleteCv(id: Int!): Boolean!
+}
+
+type Subscription {
+  cvChanged: CvEvent!
 }
